@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portefeuille Électronique — Abdelaziz Lfakir</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --deep: #0d1117;
+    --teal: #0e7490;
+    --teal-light: #22d3ee;
+    --accent: #dc2626;
+    --cream: #f5f0e8;
+    --muted: #8b9aaa;
+    --card: #141c26;
+    --border: rgba(14,116,144,0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--deep);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(13,17,23,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    color: var(--teal-light);
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--muted); font-size: 0.82rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--teal-light); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 6rem 2rem 4rem;
+    overflow: hidden;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(14,116,144,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(14,116,144,0.08) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridShift 20s linear infinite;
+  }
+  @keyframes gridShift { from { transform: translate(0,0); } to { transform: translate(60px,60px); } }
+  .hero-glow {
+    position: absolute; width: 600px; height: 600px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(14,116,144,0.18) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    animation: pulse 4s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 0.6; transform: translate(-50%,-50%) scale(1); } 50% { opacity: 1; transform: translate(-50%,-50%) scale(1.1); } }
+
+  .hero-content { position: relative; z-index: 1; max-width: 780px; }
+  .hero-label {
+    display: inline-block; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--teal-light); border: 1px solid var(--border);
+    padding: 0.35rem 1rem; border-radius: 100px; margin-bottom: 2rem;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 700; line-height: 1.1;
+    animation: fadeUp 0.8s 0.15s ease both;
+  }
+  .hero h1 em { color: var(--teal-light); font-style: italic; }
+  .hero-sub {
+    margin-top: 1.5rem; font-size: 1.05rem; color: var(--muted);
+    max-width: 560px; margin-left: auto; margin-right: auto;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .hero-meta {
+    margin-top: 2.5rem; display: flex; gap: 2rem; justify-content: center;
+    flex-wrap: wrap; font-size: 0.8rem; color: var(--muted);
+    animation: fadeUp 0.8s 0.45s ease both;
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 0.4rem; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal-light); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── SECTIONS ── */
+  section { padding: 6rem 2rem; position: relative; z-index: 1; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  .section-label {
+    font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-weight: 700; line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+  .section-line {
+    width: 48px; height: 2px;
+    background: linear-gradient(90deg, var(--teal), var(--teal-light));
+    margin-bottom: 3rem;
+  }
+
+  /* ── IDENTITY ── */
+  .identity-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+  }
+  .id-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.8rem;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .id-card:hover { border-color: var(--teal); transform: translateY(-3px); }
+  .id-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem; color: var(--teal-light); margin-bottom: 0.8rem;
+  }
+  .id-card p { font-size: 0.9rem; color: var(--muted); }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem; }
+  .tag {
+    font-size: 0.7rem; padding: 0.25rem 0.7rem;
+    background: rgba(14,116,144,0.15); border: 1px solid var(--border);
+    border-radius: 100px; color: var(--teal-light); letter-spacing: 0.05em;
+  }
+  .highlight {
+    grid-column: span 2;
+    background: linear-gradient(135deg, rgba(14,116,144,0.12), rgba(34,211,238,0.05));
+    border-color: var(--teal);
+  }
+  .highlight p { font-size: 1rem; color: var(--cream); line-height: 1.8; }
+
+  /* ── TOOLS ── */
+  .tools-section { background: rgba(14,116,144,0.04); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 1.5rem; }
+  .tool-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.8rem;
+    transition: all 0.3s;
+  }
+  .tool-card:hover { border-color: var(--teal-light); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(14,116,144,0.2); }
+  .tool-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; margin-bottom: 1rem;
+  }
+  .tool-card h3 { font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem; }
+  .tool-card p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem; }
+  .mars-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
+  .mars-item { font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 4px; }
+  .mars-high { background: rgba(34,211,238,0.15); color: var(--teal-light); }
+  .mars-med { background: rgba(245,240,232,0.1); color: var(--cream); }
+  .mars-var { background: rgba(220,38,38,0.15); color: #fca5a5; }
+  .conclusion {
+    margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);
+    font-size: 0.82rem; color: var(--teal-light); font-weight: 500;
+  }
+  .conclusion::before { content: '→ '; }
+
+  /* ── THEORY ── */
+  .theory-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .theory-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 2rem;
+    position: relative; overflow: hidden;
+    transition: all 0.3s;
+  }
+  .theory-card:hover { border-color: var(--teal); }
+  .theory-card::before {
+    content: attr(data-num);
+    position: absolute; top: -0.2rem; right: 1rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem; font-weight: 700; color: rgba(14,116,144,0.08);
+    line-height: 1; pointer-events: none;
+  }
+  .theory-card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--teal-light); margin-bottom: 0.8rem; }
+  .theory-card ul { list-style: none; }
+  .theory-card li { font-size: 0.88rem; color: var(--muted); padding: 0.3rem 0; padding-left: 1rem; position: relative; }
+  .theory-card li::before { content: '–'; position: absolute; left: 0; color: var(--teal); }
+  .theory-card .insight {
+    margin-top: 1.2rem; padding: 0.8rem 1rem;
+    background: rgba(14,116,144,0.12); border-left: 2px solid var(--teal-light);
+    border-radius: 0 6px 6px 0; font-size: 0.85rem; color: var(--cream); font-weight: 500;
+  }
+
+  /* ── MEMORY / SPACED REP ── */
+  .memory-section { }
+  .memory-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 3rem; align-items: center; }
+  .memory-text h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 1rem; }
+  .memory-text p { font-size: 0.9rem; color: var(--muted); margin-bottom: 0.8rem; }
+  .stat-row { display: flex; gap: 1.5rem; margin: 1.5rem 0; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat strong { display: block; font-size: 2rem; font-family: 'Playfair Display', serif; color: var(--teal-light); line-height: 1; }
+  .stat span { font-size: 0.75rem; color: var(--muted); }
+  .chart-wrap {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.5rem 1.5rem 1rem;
+  }
+  .chart-title { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; }
+  .chart-area { position: relative; height: 140px; }
+  .chart-area svg { width: 100%; height: 100%; }
+  .chart-labels { display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.7rem; color: var(--muted); }
+  .optimal-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    margin-top: 1rem; font-size: 0.75rem; color: var(--teal-light);
+    background: rgba(14,116,144,0.15); padding: 0.3rem 0.8rem; border-radius: 100px;
+  }
+
+  /* ── CURRICULUM ── */
+  .curriculum-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 1rem; }
+  .cur-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.5rem; text-align: center;
+    transition: all 0.3s;
+  }
+  .cur-card:hover { border-color: var(--teal-light); transform: translateY(-4px); }
+  .cur-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+  .cur-card h3 { font-size: 0.9rem; color: var(--teal-light); margin-bottom: 0.5rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 500; }
+  .cur-card p { font-size: 0.83rem; color: var(--muted); }
+  .cur-note {
+    margin-top: 2.5rem; padding: 1.5rem 2rem;
+    background: linear-gradient(135deg, rgba(14,116,144,0.1), rgba(220,38,38,0.05));
+    border: 1px solid var(--border); border-radius: 12px;
+    font-size: 0.9rem; color: var(--cream); font-style: italic;
+  }
+  .cur-note strong { color: var(--teal-light); }
+
+  /* ── CONCLUSION ── */
+  .conclusion-section {
+    background: linear-gradient(135deg, rgba(14,116,144,0.1) 0%, transparent 60%);
+    border-top: 1px solid var(--border);
+  }
+  .final-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+  .final-card {
+    padding: 1.5rem; border-radius: 12px;
+    border: 1px solid var(--border); background: var(--card);
+    transition: all 0.3s;
+  }
+  .final-card:hover { border-color: var(--teal); }
+  .final-card .num {
+    font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700;
+    color: var(--teal-light); opacity: 0.4; line-height: 1; margin-bottom: 0.5rem;
+  }
+  .final-card h3 { font-size: 0.9rem; color: var(--cream); margin-bottom: 0.4rem; font-weight: 500; }
+  .final-card p { font-size: 0.82rem; color: var(--muted); }
+  .big-quote {
+    margin: 3rem auto; max-width: 700px; text-align: center;
+    padding: 2.5rem;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: rgba(14,116,144,0.06);
+    position: relative;
+  }
+  .big-quote::before {
+    content: '"';
+    font-family: 'Playfair Display', serif;
+    font-size: 8rem; line-height: 1;
+    color: rgba(14,116,144,0.15);
+    position: absolute; top: -1.5rem; left: 1rem;
+    pointer-events: none;
+  }
+  .big-quote p {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; font-style: italic; line-height: 1.5; color: var(--cream);
+  }
+
+  /* ── REFS ── */
+  .refs-section { border-top: 1px solid var(--border); padding: 4rem 2rem; }
+  .refs-grid { columns: 2; gap: 2rem; }
+  .ref-item { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.8rem; break-inside: avoid; }
+  .ref-item a { color: var(--teal); text-decoration: none; }
+  .ref-item a:hover { text-decoration: underline; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center; padding: 2rem;
+    font-size: 0.75rem; color: var(--muted);
+    border-top: 1px solid var(--border);
+  }
+  footer span { color: var(--teal-light); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .identity-grid, .theory-grid, .memory-grid, .curriculum-grid, .final-grid { grid-template-columns: 1fr; }
+    .highlight { grid-column: span 1; }
+    .refs-grid { columns: 1; }
+  }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── REFLEXION ACCORDION ── */
+  .reflexion-wrap {
+    margin-top: 3rem;
+  }
+  .reflexion-wrap > .reflexion-label {
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .reflexion-wrap > .reflexion-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+  .accordion {
+    border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+    background: var(--card);
+  }
+  .accordion + .accordion { margin-top: 0.6rem; }
+  .acc-header {
+    width: 100%; background: none; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.1rem 1.4rem; text-align: left;
+    transition: background 0.2s;
+  }
+  .acc-header:hover { background: rgba(14,116,144,0.08); }
+  .acc-title {
+    font-size: 0.88rem; font-weight: 500; color: var(--cream);
+    display: flex; align-items: center; gap: 0.7rem;
+  }
+  .acc-num {
+    font-family: 'Playfair Display', serif; font-size: 0.75rem;
+    color: var(--teal-light); background: rgba(14,116,144,0.15);
+    padding: 0.15rem 0.5rem; border-radius: 4px; flex-shrink: 0;
+  }
+  .acc-arrow {
+    width: 20px; height: 20px; color: var(--teal);
+    transition: transform 0.3s; flex-shrink: 0;
+  }
+  .acc-header[aria-expanded="true"] .acc-arrow { transform: rotate(180deg); }
+  .acc-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.45s ease, padding 0.3s ease;
+    padding: 0 1.4rem;
+  }
+  .acc-body.open {
+    max-height: 1200px;
+    padding: 0 1.4rem 1.4rem;
+  }
+  .acc-body p {
+    font-size: 0.87rem; color: var(--muted); line-height: 1.85;
+    margin-bottom: 0.9rem;
+  }
+  .acc-body p:last-child { margin-bottom: 0; }
+  .acc-body strong { color: var(--cream); font-weight: 500; }
+  .acc-body em { color: var(--teal-light); font-style: italic; }
+  .acc-divider { height: 1px; background: var(--border); margin: 0 0 1rem; }
+  .acc-cite {
+    margin-top: 0.8rem; padding: 0.6rem 1rem;
+    background: rgba(14,116,144,0.08); border-left: 2px solid var(--teal);
+    border-radius: 0 6px 6px 0; font-size: 0.78rem; color: var(--muted);
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">A. Lfakir</div>
+  <ul class="nav-links">
+    <li><a href="#identite">Identité</a></li>
+    <li><a href="#outils">Outils</a></li>
+    <li><a href="#theorie">Théorie</a></li>
+    <li><a href="#memoire">Mémoire</a></li>
+    <li><a href="#curriculum">Curriculum</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-label">Portefeuille Électronique · EDU6505 / MED6505</div>
+    <h1>La technologie comme<br><em>levier pédagogique</em></h1>
+    <p class="hero-sub">Explorer l'intégration réfléchie des technologies numériques en enseignement des sciences de la santé</p>
+    <div class="hero-meta">
+      <span><div class="dot"></div> Abdelaziz Lfakir</span>
+      <span><div class="dot"></div> Université d'Ottawa · Faculté d'éducation</span>
+      <span><div class="dot"></div> Présenté à la Professeure Dorra Rakia Allegue</span>
+      <span><div class="dot"></div> 15 février 2026</span>
+    </div>
+  </div>
+</section>
+
+<!-- IDENTITE -->
+<section id="identite">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-label">01 — Qui suis-je ?</p>
+      <h2 class="section-title">Identité pédagogique<br>et technologique</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="identity-grid reveal">
+      <div class="id-card">
+        <h3>Formation & Expertise</h3>
+        <p>Enseignant en sciences de la santé — biologie, psychologie, neurosciences. Maîtrise en enseignement en santé à l'Université d'Ottawa.</p>
+        <div class="tag-row">
+          <span class="tag">Immunologie</span>
+          <span class="tag">Psychologie</span>
+          <span class="tag">Neurosciences</span>
+        </div>
+      </div>
+      <div class="id-card">
+        <h3>Parcours professionnel hybride</h3>
+        <p>Plus de 10 ans en production audiovisuelle (cinéma & télévision), enseignant de biologie au CEPEO, en développement d'ingénierie pédagogique.</p>
+        <div class="tag-row">
+          <span class="tag">Production AV</span>
+          <span class="tag">Ingénierie péd.</span>
+          <span class="tag">eLearning</span>
+        </div>
+      </div>
+      <div class="id-card highlight">
+        <h3>👉 Principe directeur</h3>
+        <p>La technologie comme <strong>levier pédagogique</strong>, et non comme simple outil. Chaque choix technologique doit être aligné avec les objectifs d'apprentissage, soutenir le raisonnement clinique et engager activement l'apprenant.</p>
+      </div>
+      <div class="id-card">
+        <h3>Compétences actuelles</h3>
+        <p>Conception d'expériences d'apprentissage numériques, utilisation d'Articulate Storyline & Rise, structuration de contenus interactifs et engageants.</p>
+      </div>
+      <div class="id-card">
+        <h3>Approche pédagogique</h3>
+        <p>Apprentissage rigoureux, clair et engageant. Intégration des principes d'alignement pédagogique via une approche hybride centrée sur l'apprenant.</p>
+      </div>
+    </div>
+
+    <!-- REFLEXION 1 -->
+    <div class="reflexion-wrap reveal">
+      <div class="reflexion-label">📝 Réflexion 1 — Identité pédagogique</div>
+      <div class="accordion">
+        <button class="acc-header" aria-expanded="false" onclick="toggleAcc(this)">
+          <span class="acc-title"><span class="acc-num">Réfl. 1</span>Identité pédagogique et philosophie de l'enseignement en sciences de la santé</span>
+          <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="acc-divider"></div>
+          <p>Pour débuter, j'ai réfléchi à mon identité comme éducateur, conscient que l'éducation médicale est un processus culturel profond qui dépasse la simple transmission de connaissances pour inclure un <strong>« curriculum caché »</strong> influençant l'identité professionnelle. Je me définis comme un enseignant en sciences de la santé qui cherche à rendre les apprentissages à la fois rigoureux, accessibles et engageants. Cette quête de rigueur s'inscrit dans le mouvement de l'éducation des professions de la santé fondée sur les données probantes (<em>Evidence-Informed Health Professions Education</em>), où la recherche est utilisée de manière systématique pour informer les pratiques d'enseignement et d'évaluation.</p>
+          <p>Mon parcours pluridisciplinaire en psychologie, en immunologie et en éducation m'a amené à adopter une approche centrée sur la compréhension et l'<strong>alignement pédagogique</strong>. Cette perspective rejoint les principes de l'éducation basée sur les résultats, où la définition claire des objectifs d'apprentissage et des compétences visées doit guider l'intégration de chaque activité pédagogique. Je considère que l'efficacité de l'enseignement dépend de la manière dont les méthodes choisies permettent de combler l'écart entre la performance observée et les standards désirés.</p>
+          <p>Par ailleurs, mon expérience en production audiovisuelle a grandement influencé ma manière de concevoir l'apprentissage. J'utilise des principes de narration, de progression et de structuration de l'information pour rendre les contenus plus dynamiques. Ces éléments narratifs sont essentiels pour créer des environnements d'apprentissage immersifs, à l'instar des principes de l'<em>apprentissage par le jeu (game-informed learning)</em>, où le récit et le retour d'information soutiennent l'engagement et l'identité de l'apprenant.</p>
+          <p>Cette réflexion m'a permis de poser une base importante pour le reste du portfolio : considérer la technologie non pas comme un simple outil de diffusion, mais comme un moyen de concevoir des expériences d'apprentissage structurées et centrées sur l'apprenant. Dans cette optique, l'intégration des technologies numériques doit viser à exploiter leurs <strong>affordances spécifiques</strong> — ce qu'elles permettent de faire pédagogiquement — afin de soutenir le développement de littératies numériques et de compétences professionnelles durables.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- OUTILS -->
+<section id="outils" class="tools-section">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-label">02 — Artefacts & Expériences</p>
+      <h2 class="section-title">Technologies explorées</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="tools-grid">
+
+      <!-- Articulate -->
+      <div class="tool-card reveal">
+        <div class="tool-icon">📐</div>
+        <h3>Articulate Rise 360 & Storyline</h3>
+        <p>Conception d'un mini-cours sur l'immunité collective et d'un module sur la communication en situation critique. Rise pour la structure responsive, Storyline pour les quiz formatifs et rétroactions immédiates.</p>
+        <div class="tag-row">
+          <span class="tag">SCORM/xAPI</span>
+          <span class="tag">LMS Brightspace</span>
+          <span class="tag">Interactif</span>
+        </div>
+        <div class="conclusion">Apprentissage actif, raisonnement clinique soutenu</div>
+      </div>
+
+      <!-- Figure 1 -->
+      <div class="tool-card reveal">
+        <div class="tool-icon">🔬</div>
+        <h3>Figure 1 — mLearning</h3>
+        <p>Application de cas cliniques réels partagés et discutés entre professionnels. Évaluée avec la grille MARS.</p>
+        <div class="mars-row">
+          <span class="mars-item mars-high">Engagement ↑ élevé</span>
+          <span class="mars-item mars-high">Fonctionnalité ↑ efficace</span>
+          <span class="mars-item mars-high">Esthétique ↑ claire</span>
+          <span class="mars-item mars-var">Information ~ variable</span>
+        </div>
+        <div class="conclusion">Outil complémentaire pertinent en mLearning</div>
+      </div>
+
+      <!-- CanSim -->
+      <div class="tool-card reveal">
+        <div class="tool-icon">🏥</div>
+        <h3>CanSim — Simulation virtuelle</h3>
+        <p>Simulations cliniques interactives de l'Alliance canadienne des infirmiers éducateurs. Décisions en contexte réel, feedback immédiat, contexte réaliste.</p>
+        <div class="tag-row">
+          <span class="tag">Raisonnement clinique</span>
+          <span class="tag">Jugement</span>
+          <span class="tag">Communication</span>
+        </div>
+        <div class="conclusion">Outil complémentaire à la pratique clinique</div>
+      </div>
+
+      <!-- Kahoot -->
+      <div class="tool-card reveal">
+        <div class="tool-icon">🎮</div>
+        <h3>Kahoot — Gamification</h3>
+        <p>Activité gamifiée en anatomie cardiaque. Lien avec le cadre TPACK : engagement élevé, interaction en temps réel, rappel des connaissances.</p>
+        <div class="tag-row">
+          <span class="tag">TPACK</span>
+          <span class="tag">Engagement</span>
+          <span class="tag">Feedback immédiat</span>
+        </div>
+        <p style="color:#fca5a5;font-size:0.8rem;margin-top:0.5rem;">⚠ Risque d'apprentissage superficiel si non aligné pédagogiquement.</p>
+        <div class="conclusion">Outil efficace si utilisé de façon stratégique</div>
+      </div>
+
+      <!-- FOAMed -->
+      <div class="tool-card reveal">
+        <div class="tool-icon">📱</div>
+        <h3>#FOAMed — Médias sociaux</h3>
+        <p>Exploration du hashtag Free Open Access Medical Education sur X. Accès rapide à l'information, communauté de pratique, mais qualité variable et risque de désinformation.</p>
+        <div class="tag-row">
+          <span class="tag">Connectivisme</span>
+          <span class="tag">Communauté de pratique</span>
+        </div>
+        <div class="conclusion">Enjeu clé : développer l'esprit critique</div>
+      </div>
+
+      <!-- IA & Wearables -->
+      <div class="tool-card reveal">
+        <div class="tool-icon">🤖</div>
+        <h3>IA & Technologies portables</h3>
+        <p>Suivi des données de santé, aide à la décision, apprentissage personnalisé. Défis : dépendance technologique, biais algorithmiques, confidentialité.</p>
+        <div class="tag-row">
+          <span class="tag">Curriculum caché</span>
+          <span class="tag">Personnalisation</span>
+          <span class="tag">Simulation</span>
+        </div>
+        <div class="conclusion">Transformer l'apprentissage, pas juste l'amplifier</div>
+      </div>
+
+    </div>
+
+    <!-- REFLEXIONS 3, 5, 6, 7, 8, 9 -->
+    <div class="reflexion-wrap reveal">
+      <div class="reflexion-label">📝 Réflexions — Expériences avec les outils</div>
+
+      <div class="accordion">
+        <button class="acc-header" aria-expanded="false" onclick="toggleAcc(this)">
+          <span class="acc-title"><span class="acc-num">Réfl. 3</span>Apprentissage autonome et connectivisme : l'exemple d'Articulate 360 Rise</span>
+          <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="acc-divider"></div>
+          <p>Pour cette activité, j'ai choisi d'apprendre à utiliser <strong>Articulate 360 Rise</strong>, un outil de conception e-learning, terme qui désigne de manière générale l'utilisation d'Internet pour l'éducation (Ellaway &amp; Masters, 2008). Mon objectif était de comprendre les fonctionnalités de base afin de créer une activité interactive simple, une démarche qui s'inscrit dans une approche de l'apprentissage en ligne privilégiant le processus (<em>« faire des choses »</em>) par rapport à la simple consultation de contenu.</p>
+          <p>Pour atteindre cet objectif, j'ai utilisé uniquement des technologies de réseau, notamment des tutoriels en ligne, la documentation officielle et des forums d'utilisateurs, ce qui illustre la posture de l'e-apprenant qui est par nature plus indépendant que l'apprenant traditionnel en face à face. Ce processus m'a permis de construire mes connaissances en mobilisant différentes sources, une pratique qui reflète les principes du <strong>connectivisme</strong>, où l'apprentissage est défini comme un phénomène de réseau influencé par la technologie et la socialisation (Goldie, 2016). Dans ce modèle théorique, chaque ressource consultée (site web, base de données, forum) agit comme un nœud d'information spécialisé à l'intérieur d'un réseau plus vaste.</p>
+          <p>Cette démarche a également sollicité mes littératies numériques dans deux domaines fondamentaux : le domaine <em>procédural et technique</em> pour maîtriser les fonctionnalités logicielles, et le domaine <em>cognitif</em> pour filtrer, traiter et évaluer la pertinence de l'information trouvée sur les réseaux (Smith et al., 2020). Cette méthode illustre le concept de <strong>guidance autonome dirigée</strong> (<em>directed self-guidance</em>), où l'apprenant utilise des ressources externes pour structurer son propre parcours tout en gardant le contrôle sur sa progression.</p>
+          <div class="acc-cite">Goldie, 2016 ; Ellaway &amp; Masters, 2008 ; Smith et al., 2020</div>
+        </div>
+      </div>
+
+      <div class="accordion" style="margin-top:0.6rem">
+        <button class="acc-header" aria-expanded="false" onclick="toggleAcc(this)">
+          <span class="acc-title"><span class="acc-num">Réfl. 5</span>Le mLearning au service du raisonnement clinique : l'exemple de Figure 1</span>
+          <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="acc-divider"></div>
+          <p>Dans cette activité, j'ai exploré l'application <strong>Figure 1</strong>, qui permet de consulter et de discuter des cas cliniques réels. Cette démarche s'inscrit pleinement dans le <em>mLearning</em> (ou apprentissage mobile), défini comme l'utilisation d'appareils électroniques portables pour promouvoir de nouvelles approches pédagogiques en tout lieu et à tout moment. Ce que j'ai trouvé particulièrement intéressant, c'est que l'application favorise un <strong>apprentissage actif</strong>, où l'apprenant s'engage dans la recherche d'information et la résolution de problèmes.</p>
+          <p>L'un des points forts de cet outil est qu'on ne se contente pas de lire un cas ; on est invité à réfléchir au diagnostic avant de voir la réponse. Ce processus permet de mobiliser les connaissances pour combler un écart de performance entre la situation présentée et les standards cliniques attendus (Motola et al., 2013). En exposant les étudiants à une grande diversité de pathologies qu'ils ne rencontreraient pas nécessairement lors d'un stage, l'application soutient le développement du raisonnement clinique et de la sémiologie.</p>
+          <p>En utilisant les critères <strong>MARS</strong>, j'ai constaté que l'application est engageante et fonctionnelle, avec une interface claire. Cependant, la qualité de l'information peut varier, puisque les contenus sont générés par les utilisateurs. Cette variabilité de fiabilité constitue un enjeu important, où la qualité dépend de la communauté et comporte un risque d'erreurs (Jalali et al., 2023). Figure 1 est un outil pertinent pour exposer les apprenants à des situations cliniques diversifiées, mais elle doit être utilisée avec un esprit critique et ne remplace pas un enseignement structuré.</p>
+          <div class="acc-cite">Ellaway &amp; Masters, 2008 ; Motola et al., 2013 ; Jalali et al., 2023 ; Hedhli et al., 2021</div>
+        </div>
+      </div>
+
+      <div class="accordion" style="margin-top:0.6rem">
+        <button class="acc-header" aria-expanded="false" onclick="toggleAcc(this)">
+          <span class="acc-title"><span class="acc-num">Réfl. 6</span>L'apprentissage en réseau et le mouvement #FOAMed : opportunités et limites</span>
+          <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="acc-divider"></div>
+          <p>Dans cette activité, j'ai exploré le hashtag <strong>#FOAMed</strong> (<em>Free Open Access Medical Education</em>), une initiative de microblogage utilisée par des professionnels de la santé pour partager et échanger des idées de manière fluide. Ce mouvement repose sur la <em>« push technology »</em>, qui permet de diffuser des contenus éducatifs directement sur les appareils mobiles, favorisant ainsi un accès immédiat à l'information et la création d'une <strong>communauté de pratique</strong> (Goglio-Primard, 2020).</p>
+          <p>D'un point de vue théorique, cette dynamique illustre les principes du <strong>connectivisme</strong>, où l'apprentissage est un phénomène de réseau influencé par la technologie et les interactions sociales (Goldie, 2016). Toutefois, contrairement aux sources académiques traditionnelles, les contenus associés au hashtag #FOAMed ne sont pas toujours validés par des processus de révision par les pairs, ce qui expose à un risque de désinformation ou d'erreurs cliniques.</p>
+          <p>Ces environnements numériques participent aussi à la construction d'un <strong>curriculum caché</strong>, en transmettant implicitement des normes et des valeurs professionnelles (Ellaway, 2014). L'utilisation des médias sociaux peut brouiller les frontières entre sphères personnelle et professionnelle, soulevant des enjeux de <em>professionnalisme numérique</em> (Galam, 2014). En tant qu'éducateur, il est donc essentiel de modéliser des pratiques responsables et d'accompagner les apprenants dans l'utilisation éthique de ces outils.</p>
+          <div class="acc-cite">Goldie, 2016 ; Goglio-Primard, 2020 ; Ellaway, 2014 ; Jalali et al., 2023</div>
+        </div>
+      </div>
+
+      <div class="accordion" style="margin-top:0.6rem">
+        <button class="acc-header" aria-expanded="false" onclick="toggleAcc(this)">
+          <span class="acc-title"><span class="acc-num">Réfl. 7</span>Simulation immersive et raisonnement clinique : l'apport de CanSim</span>
+          <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="acc-divider"></div>
+          <p>Dans cette activité, j'ai exploré l'application <strong>CanSim</strong>, qui propose des simulations virtuelles immersives en contexte clinique. Cette approche s'apparente à celle d'un <em>« jeu sérieux » (serious game)</em>, défini comme un outil ayant un objectif éducatif explicite et structuré (Abt, 1970). Contrairement à certaines applications centrées sur les gestes techniques (<em>task trainers</em>), CanSim met l'accent sur la <strong>prise de décision et la communication</strong>, des compétences non techniques essentielles à la pratique en santé (Motola et al., 2013).</p>
+          <p>L'apprentissage est particulièrement engageant, car il repose sur les principes de l'<em>apprentissage par le jeu</em>, où l'apprenant est activement impliqué dans un scénario dynamique (Ellaway, 2016). Ce processus mobilise le <em>make-believe</em>, permettant d'explorer des rôles cliniques variés et de soutenir le développement de l'identité professionnelle. La simulation crée un <strong>moratoire psychosocial</strong>, permettant d'expérimenter sans risque pour les patients, et s'inscrit dans une logique de <em>pratique délibérée</em>, où l'apprenant peut répéter des compétences cognitives et bénéficier d'une rétroaction immédiate.</p>
+          <p>Cependant, comme toute simulation, CanSim présente des limites liées à son degré d'<strong>isomorphisme</strong>, c'est-à-dire sa capacité à reproduire fidèlement la réalité. Bien que pertinente pour le développement du raisonnement, la simulation ne peut reproduire pleinement la complexité émotionnelle et relationnelle des interactions cliniques réelles. Son efficacité dépend de son intégration pédagogique dans une logique d'alignement visant à combler l'écart entre la théorie et la pratique.</p>
+          <div class="acc-cite">Motola et al., 2013 ; Ellaway, 2016 ; Hedhli et al., 2021 ; Massé &amp; Tremblay, 2023</div>
+        </div>
+      </div>
+
+      <div class="accordion" style="margin-top:0.6rem">
+        <button class="acc-header" aria-expanded="false" onclick="toggleAcc(this)">
+          <span class="acc-title"><span class="acc-num">Réfl. 8</span>Gamification et alignement pédagogique : l'usage de Kahoot! sous l'angle du TPACK</span>
+          <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="acc-divider"></div>
+          <p>Dans cette activité, j'ai conçu un quiz avec <strong>Kahoot!</strong> afin d'explorer la gamification en lien avec le cadre <strong>TPACK</strong> (<em>Technological Pedagogical Content Knowledge</em>). Kahoot! peut être rapproché des <em>« jeux sérieux »</em>, soit des outils conçus avec un objectif éducatif explicite (Ellaway, 2016). Ce que j'ai observé, c'est que Kahoot! favorise fortement l'engagement des apprenants. Cet engagement repose notamment sur la dimension compétitive (<em>Agon</em>), un principe fondamental du jeu qui stimule la motivation par des défis et des classements en temps réel.</p>
+          <p>Sur le plan pédagogique, l'<strong>interaction en temps réel</strong> et le <strong>feedback immédiat</strong> constituent des avantages majeurs. Cette rétroaction instantanée permet de renforcer le rappel des connaissances et de soutenir une participation active, transformant l'apprenant en acteur de son apprentissage. De plus, les questionnaires interactifs permettent d'identifier rapidement les lacunes et les écarts de performance, facilitant ainsi l'ajustement des stratégies d'enseignement.</p>
+          <p>Cependant, si elle est utilisée sans intention pédagogique claire, cette approche peut conduire à un <strong>apprentissage superficiel</strong> (<em>surface learning</em>), lorsque l'apprenant cherche à optimiser sa performance dans le jeu plutôt qu'à développer une compréhension en profondeur. L'efficacité de Kahoot! dépend donc de son alignement pédagogique, ce qui renvoie directement au cadre TPACK : l'interaction entre contenu, pédagogie et outil technologique doit être cohérente avec les objectifs d'apprentissage visés (Smith et al., 2020).</p>
+          <div class="acc-cite">Ellaway, 2016 ; Motola et al., 2013 ; Smith et al., 2020</div>
+        </div>
+      </div>
+
+      <div class="accordion" style="margin-top:0.6rem">
+        <button class="acc-header" aria-expanded="false" onclick="toggleAcc(this)">
+          <span class="acc-title"><span class="acc-num">Réfl. 9</span>Technologies portables et IA : vers une transformation des pratiques et des savoirs</span>
+          <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="acc-divider"></div>
+          <p>Dans cette activité, j'ai réfléchi au rôle des <strong>technologies portables (wearables)</strong> et de l'<strong>intelligence artificielle (IA)</strong> dans les soins de santé et la formation des professionnels. Ces systèmes intelligents, capables de collecter, traiter et transmettre des données en temps réel, agissent désormais comme des outils pédagogiques puissants (Masters, 2019). Ils permettent un suivi continu des données physiologiques et soutiennent la prise de décision clinique en fournissant des mesures objectives qui orientent les interventions personnalisées (Vidiella et al., 2026).</p>
+          <p>Ces technologies présentent plusieurs avantages majeurs, facilitant le développement du <strong>raisonnement clinique</strong> grâce à une rétroaction immédiate et à des évaluations basées sur des données objectives. Cependant, elles soulèvent des défis éthiques et pratiques importants : les <em>biais algorithmiques</em> exigent une analyse critique, et les enjeux liés à la <strong>confidentialité et la sécurité des données</strong> des patients sont majeurs (CPSBC, 2024). Un autre risque est celui de la <em>dépendance technologique</em>, où un usage excessif pourrait nuire au développement des compétences cliniques fondamentales.</p>
+          <p>Un aspect particulièrement important est l'impact sur le <strong>curriculum caché</strong> (Ellaway, 2014). L'intégration croissante de l'IA et des données peut transformer la perception du savoir en valorisant les outils technologiques au détriment du jugement clinique et de la dimension humaine du soin (Galam, 2014). Ce phénomène peut mener à une forme de <em>« perte de compétence » (deskilling)</em> et à une déshumanisation des interactions. Ces technologies ne se contentent pas d'enrichir l'apprentissage ; elles redéfinissent les identités professionnelles.</p>
+          <div class="acc-cite">Masters, 2019 ; Vidiella et al., 2026 ; Ellaway, 2014 ; CPSBC, 2024 ; Smith et al., 2020</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- THEORIE -->
+<section id="theorie">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-label">03 — Fondements théoriques</p>
+      <h2 class="section-title">Comprendre les apprenants<br>à l'ère numérique</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="theory-grid reveal">
+      <div class="theory-card" data-num="1">
+        <h3>Le mythe des « natifs numériques »</h3>
+        <ul>
+          <li>Prensky (2001) : familiarité technique trompeuse</li>
+          <li>Bennett et al. (2008) : compétences ≠ automatiques</li>
+          <li>Difficultés en contexte académique</li>
+          <li>Analyse critique & transfert clinique : difficiles</li>
+        </ul>
+        <div class="insight">👉 Former aux compétences numériques, pas les supposer</div>
+      </div>
+      <div class="theory-card" data-num="2">
+        <h3>Connectivisme & Communautés de pratique</h3>
+        <ul>
+          <li>Goldie (2016) : apprentissage en réseau</li>
+          <li>Goglio-Primard (2020) : communautés de pratique</li>
+          <li>Construction des connaissances par connexion</li>
+          <li>Apprentissage autonome via ressources en ligne</li>
+        </ul>
+        <div class="insight">👉 La connaissance réside dans les connexions</div>
+      </div>
+      <div class="theory-card" data-num="3">
+        <h3>L'enseignant comme architecte du sens</h3>
+        <ul>
+          <li>Expliciter les usages numériques attendus</li>
+          <li>Aligner les outils sur les objectifs pédagogiques</li>
+          <li>Utiliser narration et structure pour gérer la charge cognitive</li>
+          <li>Maintenir l'engagement actif</li>
+        </ul>
+        <div class="insight">👉 La technologie doit favoriser l'engagement actif</div>
+      </div>
+      <div class="theory-card" data-num="4">
+        <h3>Curriculum formel, informel & caché</h3>
+        <ul>
+          <li>Ellaway (2014) : technologie non neutre</li>
+          <li>Hafferty (1998) : curriculum caché</li>
+          <li>Formel : contenus enseignés</li>
+          <li>Informel : interactions façonnées</li>
+          <li>Caché : normes, attentes implicites transmises</li>
+        </ul>
+        <div class="insight">👉 La technologie transforme la façon d'apprendre</div>
+      </div>
+    </div>
+
+    <!-- REFLEXION 2 -->
+    <div class="reflexion-wrap reveal">
+      <div class="reflexion-label">📝 Réflexion 2 — Apprenants & technologie</div>
+      <div class="accordion">
+        <button class="acc-header" aria-expanded="false" onclick="toggleAcc(this)">
+          <span class="acc-title"><span class="acc-num">Réfl. 2</span>Relation entre apprenants et technologies : au-delà du mythe des « natifs numériques »</span>
+          <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="acc-divider"></div>
+          <p>Dans ce module, j'ai réfléchi à la relation entre les apprenants et la technologie en contexte d'enseignement en santé. Une idée fondamentale s'en dégage : <strong>les compétences numériques ne sont pas innées</strong>. Bien que les étudiants soient souvent immergés dans la technologie pour des usages personnels et sociaux, ils rencontrent des difficultés significatives lorsqu'il s'agit de les mobiliser dans un cadre académique ou professionnel (Roy et al., 2018).</p>
+          <p>Cette réalité m'amène à remettre en question le concept de <strong>« natifs numériques »</strong> (<em>digital natives</em>), proposé par Prensky en 2001, qui suggérait que cette génération maîtriserait naturellement les outils numériques par simple exposition. Or, les recherches montrent que l'utilisation fréquente de plateformes sociales comme Facebook ne se traduit pas automatiquement par une compétence à utiliser des technologies complexes pour l'apprentissage (Smith et al., 2020). Des travaux plus récents démontrent que cette vision est simplifiée et que les compétences numériques sont en réalité distribuées de manière très inégale parmi les étudiants.</p>
+          <p>En tant qu'éducateur, cela implique que nous ne pouvons plus supposer que ces compétences sont acquises. Nous devons accompagner activement les apprenants dans le développement de leurs littératies numériques à travers trois domaines : <strong>procédural</strong> (l'usage technique), <strong>cognitif</strong> (la recherche et l'évaluation de l'information) et <strong>socioculturel</strong> (le professionnalisme numérique) (Smith et al., 2020). L'enseignant doit agir comme un guide pour aligner les affordances technologiques avec les objectifs pédagogiques et les compétences professionnelles visées (Ellaway, 2014).</p>
+          <div class="acc-cite">Prensky, 2001 ; Bennett et al., 2008 ; Roy et al., 2018 ; Smith et al., 2020 ; Ellaway, 2014</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MEMOIRE -->
+<section id="memoire">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-label">04 — Application des connaissances</p>
+      <h2 class="section-title">La répétition espacée :<br>apprendre mieux, retenir plus longtemps</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="memory-grid reveal">
+      <div class="memory-text">
+        <h3>La courbe de l'oubli d'Ebbinghaus</h3>
+        <p>Sans révision structurée, le cerveau élimine rapidement les données non consolidées pour économiser ses ressources. La répétition espacée contrecarre ce processus naturel.</p>
+        <div class="stat-row">
+          <div class="stat">
+            <strong>50%</strong>
+            <span>oublié après 1 jour</span>
+          </div>
+          <div class="stat">
+            <strong>70%</strong>
+            <span>perdu après 1 semaine</span>
+          </div>
+          <div class="stat">
+            <strong>×2–3</strong>
+            <span>rétention améliorée</span>
+          </div>
+        </div>
+        <p style="font-size:0.85rem;color:var(--muted);">Applications : anatomie, pharmacologie, protocoles cliniques. Utilisé avec NotebookLM pour la structuration visuelle et la transformation de contenus complexes.</p>
+        <div class="optimal-badge">⏱ Rythme optimal : J1, J3, J7, J14</div>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">Rétention de la mémoire (%) — avec vs sans révision espacée</div>
+        <div class="chart-area">
+          <svg viewBox="0 0 400 130" xmlns="http://www.w3.org/2000/svg">
+            <!-- Grid lines -->
+            <line x1="40" y1="10" x2="40" y2="110" stroke="rgba(139,154,170,0.2)" stroke-width="1"/>
+            <line x1="40" y1="110" x2="390" y2="110" stroke="rgba(139,154,170,0.2)" stroke-width="1"/>
+            <line x1="40" y1="60" x2="390" y2="60" stroke="rgba(139,154,170,0.1)" stroke-width="1" stroke-dasharray="4"/>
+            <line x1="40" y1="10" x2="390" y2="10" stroke="rgba(139,154,170,0.1)" stroke-width="1" stroke-dasharray="4"/>
+            <!-- Labels -->
+            <text x="32" y="113" fill="#8b9aaa" font-size="9" text-anchor="middle">0%</text>
+            <text x="32" y="63" fill="#8b9aaa" font-size="9" text-anchor="middle">50%</text>
+            <text x="32" y="13" fill="#8b9aaa" font-size="9" text-anchor="middle">100%</text>
+            <!-- Forgetting curve (no review) -->
+            <path d="M 50,12 Q 120,45 180,75 Q 250,95 390,105"
+              fill="none" stroke="rgba(220,38,38,0.6)" stroke-width="2"/>
+            <!-- Spaced repetition curve -->
+            <path d="M 50,12 L 100,55 L 100,20 L 160,58 L 160,18 L 240,52 L 240,15 L 330,42 L 330,12 L 390,15"
+              fill="none" stroke="#22d3ee" stroke-width="2.5" stroke-linejoin="round"/>
+            <!-- Area under spaced rep -->
+            <path d="M 50,12 L 100,55 L 100,20 L 160,58 L 160,18 L 240,52 L 240,15 L 330,42 L 330,12 L 390,15 L 390,110 L 50,110 Z"
+              fill="rgba(34,211,238,0.05)"/>
+            <!-- Legend -->
+            <line x1="50" y1="10" x2="70" y2="10" stroke="#22d3ee" stroke-width="2"/>
+            <text x="75" y="13" fill="#22d3ee" font-size="8">Répétition espacée</text>
+            <line x1="200" y1="10" x2="220" y2="10" stroke="rgba(220,38,38,0.6)" stroke-width="2"/>
+            <text x="225" y="13" fill="rgba(220,38,38,0.8)" font-size="8">Sans révision</text>
+          </svg>
+        </div>
+        <div class="chart-labels">
+          <span>Jour 1</span><span>Jour 3</span><span>Jour 7</span><span>Jour 14</span>
+        </div>
+        <p style="font-size:0.75rem;color:var(--muted);margin-top:0.8rem;">Réf. : Cepeda et al. (2006) ; Ebbinghaus (1885)</p>
+      </div>
+    </div>
+
+    <!-- REFLEXION 10 -->
+    <div class="reflexion-wrap reveal">
+      <div class="reflexion-label">📝 Réflexion 10 — Infographie & transfert de connaissances</div>
+      <div class="accordion">
+        <button class="acc-header" aria-expanded="false" onclick="toggleAcc(this)">
+          <span class="acc-title"><span class="acc-num">Réfl. 10</span>Transformation visuelle et transfert de connaissances : l'infographie sur la répétition espacée</span>
+          <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="acc-divider"></div>
+          <p>Pour cette activité, une infographie a été conçue à l'aide de <strong>Notebook</strong> afin de vulgariser le concept de <em>répétition espacée</em>, issu de la psychologie cognitive. Ce projet s'inscrit dans une démarche de <strong>transfert des connaissances</strong> (<em>Knowledge Translation</em>), visant à combler l'écart entre les données issues de la recherche et leur application en contexte éducatif ou clinique (Thomas &amp; Bussières, 2021). L'objectif était de traduire des résultats scientifiques complexes en un format visuel simple et accessible, en mettant en évidence des concepts clés tels que la courbe de l'oubli et les bénéfices de la révision espacée.</p>
+          <p>Le principal défi a été de sélectionner l'information essentielle tout en évitant une <strong>simplification excessive</strong>. Cette tension reflète le rôle de l'éducateur, qui doit adapter des données probantes à des contextes d'apprentissage concrets (Thomas &amp; Bussières, 2021). Cette transformation repose sur un processus de <em>réduction et d'abstraction</em>, où seules les informations pertinentes sont conservées et restructurées pour favoriser la compréhension.</p>
+          <p>Les outils numériques comme Notebook facilitent cette structuration visuelle de l'information. Cette approche soutient un <strong>apprentissage actif</strong>, où l'apprenant peut identifier rapidement les concepts clés et traiter l'information de manière autonome (Hedhli et al., 2021). Dans une perspective plus large, ce type de support visuel peut également être mobilisé pour améliorer la <em>communication avec les patients</em>, notamment en favorisant la prise de décision partagée grâce à une meilleure compréhension des informations cliniques (CPSBC, 2024). L'infographie ne remplace pas l'enseignement traditionnel, mais vient le compléter en facilitant la compréhension, la rétention et l'application des connaissances.</p>
+          <div class="acc-cite">Thomas &amp; Bussières, 2021 ; Cepeda et al., 2006 ; Hedhli et al., 2021 ; Lanthier et al., 2019</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CURRICULUM -->
+<section id="curriculum">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-label">05 — Réflexion critique</p>
+      <h2 class="section-title">Technologie & curriculum :<br>ce qu'elle enseigne sans qu'on s'en rende compte</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="curriculum-grid reveal">
+      <div class="cur-card">
+        <div class="cur-icon">📚</div>
+        <h3>Curriculum formel</h3>
+        <p>La technologie influence directement les contenus enseignés — ce qu'on choisit d'inclure ou d'exclure dans un module numérique.</p>
+      </div>
+      <div class="cur-card">
+        <div class="cur-icon">💬</div>
+        <h3>Curriculum informel</h3>
+        <p>Elle façonne les interactions entre apprenants et entre apprenants et enseignants — forums, fils de discussion, messagerie instantanée.</p>
+      </div>
+      <div class="cur-card">
+        <div class="cur-icon">🔒</div>
+        <h3>Curriculum caché</h3>
+        <p>Elle transmet des normes et attentes implicites — rapidité, données sur jugement, autonomie dans l'apprentissage.</p>
+      </div>
+    </div>
+    <div class="cur-note reveal">
+      <strong>Réflexion pédagogique (Ellaway, 2014 ; Hafferty, 1998) :</strong> La technologie n'est pas neutre. Elle transforme la manière d'apprendre et d'enseigner. Intégrer la vidéo avec Camtasia ou une IA générative comme Kling pour des capsules cliniques, c'est aussi choisir un message pédagogique implicite sur l'autorité du savoir et la façon dont il circule.
+    </div>
+
+    <!-- REFLEXION 4 -->
+    <div class="reflexion-wrap reveal">
+      <div class="reflexion-label">📝 Réflexion 4 — Impact technologique</div>
+      <div class="accordion">
+        <button class="acc-header" aria-expanded="false" onclick="toggleAcc(this)">
+          <span class="acc-title"><span class="acc-num">Réfl. 4</span>Impact technologique : curricula formel, informel et caché</span>
+          <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="acc-divider"></div>
+          <p>Pour cette activité, j'ai choisi de créer une capsule vidéo avec l'outil <strong>Kling</strong> pour explorer l'impact de la technologie sur les trois registres de l'environnement d'apprentissage : le curriculum formel, informel et caché (Ellaway, 2014). Mon objectif était de développer une réflexion critique sur le rôle de la technologie en enseignement en santé, dépassant la simple maîtrise technique pour interroger ses dimensions socioculturelles. Le choix de la vidéo m'a permis de proposer un format plus engageant et accessible, répondant aux préférences des apprenants actuels pour les ressources multimédias dynamiques.</p>
+          <p>Ce que j'ai retenu, c'est que la technologie ne sert pas seulement à transmettre le <strong>curriculum formel</strong>, c'est-à-dire le programme officiel et les contenus théoriques. Elle agit comme un médiateur puissant qui influence aussi le <strong>curriculum informel</strong>, car elle transforme radicalement les interactions interpersonnelles entre les apprenants et avec les enseignants, notamment en milieu clinique (Jalali et al., 2023). Plus encore, la technologie véhicule un <strong>curriculum caché</strong> : à travers les choix institutionnels, elle envoie des messages implicites sur les valeurs de la profession et sur ce qui est considéré comme une « bonne » pratique médicale (Galam, 2014).</p>
+          <p>Cette expérience m'a fait comprendre que la technologie n'est jamais neutre ; elle est imprégnée d'influences historiques et sociales qui façonnent la construction de l'<strong>identité professionnelle</strong>. L'usage non supervisé d'appareils mobiles peut créer des tensions éthiques ou être perçu comme un manque de professionnalisme, illustrant ainsi l'existence d'un <em>« curriculum mobile caché »</em> (Ellaway, 2014). En tant qu'enseignant en santé, il devient essentiel de choisir les technologies de manière réfléchie, guidée par un alignement pédagogique rigoureux où les affordances de l'outil sont mises au service des objectifs d'apprentissage et du développement du raisonnement clinique (Motola et al., 2013).</p>
+          <div class="acc-cite">Ellaway, 2014 ; Ellaway &amp; Masters, 2008 ; Galam, 2014 ; Jalali et al., 2023 ; Motola et al., 2013</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONCLUSION -->
+<section id="conclusion" class="conclusion-section">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-label">06 — Synthèse</p>
+      <h2 class="section-title">Vers une intégration pédagogique<br>réfléchie de la technologie</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="big-quote reveal">
+      <p>Mieux intégrer la technologie pour soutenir un apprentissage durable — pas plus de technologie, mais une meilleure intégration au service de l'apprenant.</p>
+    </div>
+
+    <div class="final-grid reveal">
+      <div class="final-card">
+        <div class="num">01</div>
+        <h3>Alignement pédagogique</h3>
+        <p>Chaque outil doit être aligné entre le contenu, la pédagogie et la technologie. L'engagement ≠ apprentissage automatique.</p>
+      </div>
+      <div class="final-card">
+        <div class="num">02</div>
+        <h3>Usage critique</h3>
+        <p>Éviter la simplification excessive. Maintenir un jugement professionnel rigoureux face aux outils numériques.</p>
+      </div>
+      <div class="final-card">
+        <div class="num">03</div>
+        <h3>Posture professionnelle</h3>
+        <p>Intégrer la technologie de manière réfléchie, maintenir le jugement clinique et adapter aux besoins des apprenants.</p>
+      </div>
+      <div class="final-card">
+        <div class="num">04</div>
+        <h3>Soutenir le raisonnement</h3>
+        <p>Utiliser la simulation, l'IA et la gamification pour faciliter l'application des connaissances, non les remplacer.</p>
+      </div>
+      <div class="final-card">
+        <div class="num">05</div>
+        <h3>Engagement actif</h3>
+        <p>Placer l'apprenant au cœur du dispositif. La technologie comme espace de pratique, pas de consommation passive.</p>
+      </div>
+      <div class="final-card">
+        <div class="num">06</div>
+        <h3>Apprentissage durable</h3>
+        <p>Favoriser la répétition espacée, la rétroaction formative et le développement de compétences transférables.</p>
+      </div>
+    </div>
+
+    <!-- REFLEXION 11 -->
+    <div class="reflexion-wrap reveal">
+      <div class="reflexion-label">📝 Réflexion 11 — Synthèse finale</div>
+      <div class="accordion">
+        <button class="acc-header" aria-expanded="false" onclick="toggleAcc(this)">
+          <span class="acc-title"><span class="acc-num">Réfl. 11</span>Vers une intégration pédagogique réfléchie de la technologie</span>
+          <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="acc-divider"></div>
+          <p>Ce portfolio met en évidence que la technologie doit être envisagée comme un <strong>levier pédagogique, et non comme une finalité</strong>, puisque l'éducation et l'amélioration des résultats pour les patients demeurent les objectifs premiers (Ellaway &amp; Masters, 2008). L'utilisation du numérique en éducation ne relève pas d'une application mécanique d'outils, mais exige une capacité d'adaptation et de réflexion face à des contextes en constante évolution.</p>
+          <p>Les différentes activités ont démontré que l'efficacité des technologies repose avant tout sur leur <strong>alignement pédagogique</strong> avec les objectifs d'apprentissage et les compétences visées. Cette logique s'inscrit dans le cadre <strong>TPACK</strong>, où la valeur de la technologie émerge de l'interaction entre contenu, pédagogie et outils (Smith et al., 2020). Une intégration pertinente nécessite également de mobiliser les <em>affordances spécifiques</em> des technologies — telles que la rétroaction immédiate ou la simulation — afin de répondre à des besoins éducatifs précis (Motola et al., 2013).</p>
+          <p>Dans une perspective future, ces technologies offrent un potentiel important pour soutenir l'engagement actif, le développement du raisonnement clinique et l'application des connaissances (Thomas &amp; Bussières, 2021). Cependant, une intégration réussie implique également le développement d'une <strong>utilisation critique des technologies</strong>. Les compétences numériques ne peuvent être considérées comme acquises ; elles doivent être explicitement enseignées et développées dans leurs dimensions technique, cognitive et socioculturelle (Smith et al., 2020). Cette exigence est d'autant plus importante avec l'émergence de l'intelligence artificielle, où des enjeux tels que les biais, la fiabilité et la responsabilité professionnelle deviennent centraux (CPSBC, 2024). <em>L'objectif n'est pas d'intégrer davantage de technologies, mais de les intégrer de manière réfléchie, critique et alignée.</em></p>
+          <div class="acc-cite">Ellaway &amp; Masters, 2008 ; Smith et al., 2020 ; Motola et al., 2013 ; Thomas &amp; Bussières, 2021 ; Goldie, 2016 ; CPSBC, 2024</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- REFS -->
+<section class="refs-section">
+  <div class="container">
+    <p class="section-label">Références bibliographiques</p>
+    <div class="refs-grid">
+      <p class="ref-item">Abt, C. C. (1970). <em>Serious games.</em> Viking Compass.</p>
+      <p class="ref-item">Bahner, D. P., et al. (2012). How we use social media to supplement a novel curriculum in medical education. <em>Medical Teacher, 34</em>(6), 439–444.</p>
+      <p class="ref-item">Bennett, S., Maton, K., &amp; Kervin, L. (2008). The 'digital natives' debate: A critical review of the evidence. <em>British Journal of Educational Technology.</em></p>
+      <p class="ref-item">Cepeda, N. J., et al. (2006). Distributed practice in verbal recall tasks. <em>Psychological Bulletin, 132</em>(3), 354–380.</p>
+      <p class="ref-item">Choplin, A., et al. (2021). Le jeu sérieux au service de l'apprentissage des physiothérapeutes. <em>Pédagogie Médicale, 22</em>, 5–13.</p>
+      <p class="ref-item">College of Physicians and Surgeons of British Columbia (CPSBC). (2024). <em>Ethical Principles for Artificial Intelligence in Medicine.</em> Interim Guidance, Version 1.1.</p>
+      <p class="ref-item">Ellaway, R., &amp; Masters, K. (2008). AMEE Guide 32: e-Learning in medical education Part 1. <em>Medical Teacher, 30</em>(5), 455–473.</p>
+      <p class="ref-item">Ellaway, R. H. (2014). The informal and hidden curricula of mobile device use in medical education. <em>Medical Teacher, 36</em>(1), 89–91.</p>
+      <p class="ref-item">Ellaway, R. H. (2016). A conceptual framework of game-informed principles for health professions education. <em>Simulation in Healthcare.</em></p>
+      <p class="ref-item">Galam, É. (2014). Devenir médecin : éclairer le hidden curriculum. <em>La Presse Médicale, 43</em>, 358–362.</p>
+      <p class="ref-item">Goglio-Primard, K. (2020). Les communautés de pratique. <em>Revue française de gestion, (287)</em>, 161–169.</p>
+      <p class="ref-item">Goldie, J. G. S. (2016). Connectivism: A knowledge learning theory for the digital age? <em>Medical Teacher, 38</em>(10), 1064–1069.</p>
+      <p class="ref-item">Hedhli, A., et al. (2021). Apport des applications mobiles dans l'apprentissage et la pratique médicale. <em>La Tunisie Médicale, 99</em>(12), 1134–1140.</p>
+      <p class="ref-item">Jalali, A., et al. (2023). L'utilisation des médias sociaux en éducation médicale. <em>University of Ottawa Journal of Medicine, 12</em>(1), 34–40.</p>
+      <p class="ref-item">Lanthier, L., et al. (2019). Un outil de transfert des connaissances en médecine interne. <em>La Revue de médecine interne, 40</em>, 410–411.</p>
+      <p class="ref-item">Massé, J., &amp; Tremblay, M.-C. (2023). Enjeux et leçons tirées du transfert en ligne. <em>Revue internationale des technologies en pédagogie universitaire, 20</em>(1), 1–16.</p>
+      <p class="ref-item">Masters, K. (2019). Artificial intelligence in medical education. <em>Medical Teacher, 41</em>(9), 976–980.</p>
+      <p class="ref-item">Motola, I., et al. (2013). Simulation in healthcare education. <em>AMEE Guide No. 82, Medical Teacher, 35</em>(e1511–e1530).</p>
+      <p class="ref-item">Prensky, M. (2001). Digital natives, digital immigrants. <em>On the Horizon, 9</em>(5).</p>
+      <p class="ref-item">Roy, N., Gareau, A., &amp; Poellhuber, B. (2018). Les natifs du numérique aux études. <em>Canadian Journal of Learning and Technology, 44</em>(1).</p>
+      <p class="ref-item">Smith, E. E., Kahlke, R., &amp; Judd, T. (2020). Not just digital natives: Integrating technologies in professional education contexts. <em>Australasian Journal of Educational Technology, 36</em>(3), 1–14.</p>
+      <p class="ref-item">Thomas, A., &amp; Bussières, A. (2021). Leveraging knowledge translation in health professions education. <em>Advances in Health Sciences Education, 26</em>, 1157–1171.</p>
+      <p class="ref-item">Vidiella, A., Reverté-Villarroya, S., &amp; Palau, R. (2026). Can wearable electronic devices bring a new paradigm to simulations in healthcare education? <em>Teaching and Learning in Nursing, 21</em>, e851–e860.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Portefeuille électronique · <span>Abdelaziz Lfakir</span> · EDU6505 / MED6505 · Université d'Ottawa · 2026</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => obs.observe(r));
+
+  // Accordion toggle
+  function toggleAcc(btn) {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', !expanded);
+    const body = btn.nextElementSibling;
+    body.classList.toggle('open', !expanded);
+  }
+</script>
+</body>
+</html>
